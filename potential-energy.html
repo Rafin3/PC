@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Potential Energy Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Da&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Baloo Da', sans-serif;
+            text-align: center;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            font-weight: lighter;
+        }
+
+        h1 {
+            font-family: 'Baloo Da', cursive;
+            font-weight: lighter;
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border-radius: 10px;
+            width: 50%;
+            text-align: center;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 20px auto;
+        }
+
+        .container {
+            position: relative;
+            margin: 0 auto;
+            width: 300px;
+            height: 500px;
+            transform: translateY(-150px);
+        }
+
+        .art {
+            position: absolute;
+            bottom: -50px;
+            width: 300px;
+            height: 300px;
+            background-image: url("earth.jpeg");
+            background-size: cover;
+            background-position: center;
+            border-radius: 50%;
+        }
+
+        .object {
+            position: absolute;
+            background-image: url("st.png");
+            background-size: cover;
+            background-position: center;
+            width: 80px;
+            height: 40px;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            top: 180px;
+        }
+
+        input {
+            margin-top: -145px;
+            padding: 10px;
+            font-size: 16px;
+            width: 250px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            font-family: 'Baloo Da', sans-serif;
+            font-weight: lighter;
+        }
+
+        button {
+            margin-top: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Baloo Da', sans-serif;
+            font-weight: lighter;
+        }
+
+        button:hover {
+            background-color: #0066D3;
+        }
+
+        .output {
+            margin-top: 20px;
+            font-size: 16px; /* ফন্ট সাইজ কমিয়ে 16px করা হয়েছে */
+            font-weight: lighter;
+            font-family: 'Baloo Da', sans-serif;
+        }
+
+        .formula {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: lighter;
+            gap: 5px;
+            font-family: 'Baloo Da', sans-serif;
+        }
+
+        sup {
+            font-size: 0.8em;
+        }
+
+        input::placeholder {
+            font-family: 'Baloo Da', sans-serif;
+            font-weight: lighter;
+        }
+
+        .gm-m {
+            display: inline-block;
+            text-align: center;
+            font-size: 1.2em;
+            vertical-align: middle;
+        }
+
+        .bracket {
+            display: inline-block;
+            font-size: 1.2em;
+            vertical-align: middle;
+            font-weight: lighter;
+            transform: scale(0.7, 2);
+        }
+
+        .fraction {
+            display: inline-block;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+        .fraction div {
+            display: block;
+        }
+
+        .fraction .numerator {
+            border-bottom: 3px solid black;
+            font-weight: bold;
+        }
+
+        .minus {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 1.5em;
+            margin: 0 10px;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html">
+        <img src="back.png" alt="Back to Home" style="position: absolute; top: 10px; left: 10px; width: 50px; height: 50px; cursor: pointer;">
+    </a>
+    <h1>Potential Energy Calculator</h1>
+    <div class="container">
+        <div class="art"></div>
+        <div class="object" id="object"></div>
+    </div>
+    <input id="mass" type="number" placeholder="Mass of Object (kg)">
+    <input id="height" type="number" placeholder="Height from Earth (m)">
+    <button onclick="calculatePotentialEnergy()">Calculate Potential Energy</button>
+    <div class="output" id="output"></div>
+    <div class="output" id="formula"></div>
+
+    <script>
+        function calculatePotentialEnergy() {
+            const earthRadius = 6371000;
+            const gravitationalConstant = 6.67430 * Math.pow(10, -11);
+            const earthMass = 5.972 * Math.pow(10, 24);
+
+            let inputMass = parseFloat(document.getElementById("mass").value);
+            let inputHeight = parseFloat(document.getElementById("height").value);
+
+            if (isNaN(inputMass) || inputMass <= 0 || isNaN(inputHeight) || inputHeight < 0) {
+                document.getElementById("output").textContent = "Please enter valid positive values for mass and height.";
+                document.getElementById("formula").textContent = "";
+                return;
+            }
+
+            const R = earthRadius;
+            const h = inputHeight;
+            const m = inputMass;
+            const distanceFromCenter = R + h;
+
+            const potentialEnergy = gravitationalConstant * earthMass * m * (1 / R - 1 / distanceFromCenter);
+
+            const gConstantFormatted = `6.67430 &times; 10<sup>-11</sup>`;
+            const earthMassFormatted = `5.972 &times; 10<sup>24</sup>`;
+
+            let formulaHtml = `
+                <div class="formula">
+                    <span>E<sub>p</sub> =</span>
+                    <div class="gm-m">
+                        <span>GMm</span>
+                    </div>
+                    <div class="bracket">(</div>
+                    <div class="fraction">
+                        <div class="numerator">1</div>
+                        <div>R</div>
+                    </div>
+                    <span class="minus">-</span>
+                    <div class="fraction">
+                        <div class="numerator">1</div>
+                        <div>R + h</div>
+                    </div>
+                    <div class="bracket">)</div>
+                </div>
+            `;
+
+            let step = 1;
+
+            function displayFormula() {
+                switch (step) {
+                    case 1:
+                        document.getElementById("formula").innerHTML = formulaHtml;
+                        break;
+                    case 2:
+                        document.getElementById("formula").innerHTML += `
+                            <div class="formula">
+                                <span>E<sub>p</sub> =</span>
+                                <div class="gm-m">
+                                    <span>${gConstantFormatted} &times; ${earthMassFormatted} &times; ${m}</span>
+                                </div>
+                                <div class="bracket">(</div>
+                                <div class="fraction">
+                                    <div class="numerator">1</div>
+                                    <div>${R}</div>
+                                </div>
+                                <span class="minus">-</span>
+                                <div class="fraction">
+                                    <div class="numerator">1</div>
+                                    <div>${R} + ${h}</div>
+                                </div>
+                                <div class="bracket">)</div>
+                            </div>
+                        `;
+                        break;
+                    case 3:
+                        const engineeringNotation = potentialEnergy.toExponential();
+                        const [coefficient, exponent] = engineeringNotation.split('e');
+                        const exponentValue = parseInt(exponent);
+                        const remainder = exponentValue % 3;
+                        let newExponent = exponentValue - remainder;
+                        let newCoefficient = parseFloat(coefficient) * Math.pow(10, remainder);
+
+                        if (newCoefficient >= 1000) {
+                            newCoefficient /= 1000;
+                            newExponent += 3;
+                        } else if (newCoefficient < 1) {
+                            newCoefficient *= 1000;
+                            newExponent -= 3;
+                        }
+
+                        const formattedEnergy = `${newCoefficient.toFixed(2)} x 10<sup>${newExponent}</sup>`;
+
+                        document.getElementById("formula").innerHTML += `
+                            <p style="font-weight: lighter; font-size: 16px;">E<sub>p</sub> = ${formattedEnergy} J</p>
+                        `;
+                        break;
+                }
+                step++;
+            }
+
+            setTimeout(displayFormula, 500);
+            setTimeout(displayFormula, 1000);
+            setTimeout(displayFormula, 1500);
+
+            const objectElement = document.getElementById("object");
+            if (inputHeight === 0) {
+                objectElement.style.top = "290px";
+            } else {
+                objectElement.style.top = "180px";
+            }
+        }
+    </script>
+</body>
+</html>
