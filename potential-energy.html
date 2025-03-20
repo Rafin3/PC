@@ -89,7 +89,7 @@
 
         .output {
             margin-top: 20px;
-            font-size: 16px; /* ফন্ট সাইজ কমিয়ে 16px করা হয়েছে */
+            font-size: 16px;
             font-weight: lighter;
             font-family: 'Baloo Da', sans-serif;
         }
@@ -117,6 +117,10 @@
             text-align: center;
             font-size: 1.2em;
             vertical-align: middle;
+        }
+
+        .gm-m span {
+            font-weight: lighter;
         }
 
         .bracket {
@@ -167,9 +171,9 @@
 
     <script>
         function calculatePotentialEnergy() {
-            const earthRadius = 6371000;
-            const gravitationalConstant = 6.67430 * Math.pow(10, -11);
-            const earthMass = 5.972 * Math.pow(10, 24);
+            const earthRadius = 6371000; // Earth's radius in meters
+            const gravitationalConstant = 6.67430 * Math.pow(10, -11); // Gravitational constant
+            const earthMass = 5.972 * Math.pow(10, 24); // Earth's mass in kg
 
             let inputMass = parseFloat(document.getElementById("mass").value);
             let inputHeight = parseFloat(document.getElementById("height").value);
@@ -235,30 +239,37 @@
                                     <div>${R} + ${h}</div>
                                 </div>
                                 <div class="bracket">)</div>
+                                <span style="margin-left: 10px;">J</span> <!-- Joule একক যোগ করা হয়েছে -->
                             </div>
                         `;
                         break;
                     case 3:
-                        const engineeringNotation = potentialEnergy.toExponential();
-                        const [coefficient, exponent] = engineeringNotation.split('e');
-                        const exponentValue = parseInt(exponent);
-                        const remainder = exponentValue % 3;
-                        let newExponent = exponentValue - remainder;
-                        let newCoefficient = parseFloat(coefficient) * Math.pow(10, remainder);
+                        if (potentialEnergy === 0) {
+                            document.getElementById("formula").innerHTML += `
+                                <p style="font-weight: lighter; font-size: 16px;">E<sub>p</sub> = 0 J</p>
+                            `;
+                        } else {
+                            const engineeringNotation = potentialEnergy.toExponential();
+                            const [coefficient, exponent] = engineeringNotation.split('e');
+                            const exponentValue = parseInt(exponent);
+                            const remainder = exponentValue % 3;
+                            let newExponent = exponentValue - remainder;
+                            let newCoefficient = parseFloat(coefficient) * Math.pow(10, remainder);
 
-                        if (newCoefficient >= 1000) {
-                            newCoefficient /= 1000;
-                            newExponent += 3;
-                        } else if (newCoefficient < 1) {
-                            newCoefficient *= 1000;
-                            newExponent -= 3;
+                            if (newCoefficient >= 1000) {
+                                newCoefficient /= 1000;
+                                newExponent += 3;
+                            } else if (newCoefficient < 1) {
+                                newCoefficient *= 1000;
+                                newExponent -= 3;
+                            }
+
+                            const formattedEnergy = `${newCoefficient.toFixed(2)} x 10<sup>${newExponent}</sup>`;
+
+                            document.getElementById("formula").innerHTML += `
+                                <p style="font-weight: lighter; font-size: 16px;">E<sub>p</sub> = ${formattedEnergy} J</p>
+                            `;
                         }
-
-                        const formattedEnergy = `${newCoefficient.toFixed(2)} x 10<sup>${newExponent}</sup>`;
-
-                        document.getElementById("formula").innerHTML += `
-                            <p style="font-weight: lighter; font-size: 16px;">E<sub>p</sub> = ${formattedEnergy} J</p>
-                        `;
                         break;
                 }
                 step++;
